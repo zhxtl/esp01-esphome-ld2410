@@ -1,6 +1,6 @@
 # esp01-esphome-ld2410
 
-本项目是一个使用ld2410雷达和esp01制作的人体存在传感器并接入ESPHOME的简易说明，并提供ESPHOME配置文件。之前还需要搞驱动，现在esphome直接支持了方便了很多。
+本项目是一个使用ld2410雷达和esp01制作的人体存在传感器并接入ESPHOME 的简易说明，并提供ESPHOME8以上版本配置文件。之前还需要搞驱动，现在esphome直接支持了方便了很多。
 
 ## 硬件
 
@@ -40,7 +40,11 @@
 
 （这里写的草率了，偷懒~）
 
-## 配置文件
+ESPHome 2023.8.0 - 16th August 2023LD2410
+The LD2410 component has had a massive upgrade thanks to @regevbr! It now supports settings most if not all configuration parameters via switches / numbers and selects and exposes more data via various sensors. This includes breaking changes that mean the existing gate configuration options have been moved to the number platform.
+代码网址：https://esphome.io/components/sensor/ld2410.html?highlight=ld2410
+该传感器允许您使用LD2410传感器执行不同的测量。ld2410
+## 配置文件ESPHOME 8以上版本
 
 ```yaml
 
@@ -77,62 +81,152 @@ captive_portal:
 
 
 uart:
-  id: uart1
-  tx_pin: GPIO1
-  rx_pin: GPIO3
+  tx_pin: GPIO1   #使用D1 mini RX
+  rx_pin: GPIO3   #使用D1 mini TX
   baud_rate: 256000
   parity: NONE
   stop_bits: 1
-
+# Example configuration entry
 ld2410:
-  uart_id: uart1 #指定串口 就是上面uart设置的ID
-  timeout: 10s #无人持续时间(秒)，默认5秒,不宜设置的过小，以保证动态静态目标在短时间都丢失后给予一定的冗余
-  max_move_distance : 3m #运动检测的最大距离 设置你想感应的范围
-  max_still_distance: 3m #静态检测的最大距离 设置你想感应的范围
-  g0_move_threshold: 50 # 动态感应门灵敏度，高于此值则触发 0米
-  g0_still_threshold: 0 # 静态感应门灵敏度，高于此值则触发 0米
-  g1_move_threshold: 40 # 0~0.75米
-  g1_still_threshold: 40 # 0~0.75米
-  g2_move_threshold: 40 # 0.75~1.5米
-  g2_still_threshold: 40 # 0.75~1.5米
-  g3_move_threshold: 40 # 1.5~2.25米
-  g3_still_threshold: 40 # 1.5~2.25米
-  g4_move_threshold: 40 # 2.25~3米
-  g4_still_threshold: 40 # 2.25~3米
-  g5_move_threshold: 40 # 3~3.75米
-  g5_still_threshold: 100 # 3~3.75米 
-  g6_move_threshold: 100 # 3.75~4.5米
-  g6_still_threshold: 100 # 3.75~4.5米
-  g7_move_threshold: 100 # 4.5~5.25米
-  g7_still_threshold: 100 # 4.5~5.25米
-  g8_move_threshold: 100 # 5.25~6米
-  g8_still_threshold: 100 # 5.25~6米
+number:
+  - platform: ld2410
+    timeout:
+      name: timeout
+    light_threshold:
+      name: light threshold
+    max_move_distance_gate:
+      name: max move distance gate
+    max_still_distance_gate:
+      name: max still distance gate
+    g0:
+      move_threshold:
+        name: g0 move threshold
+      still_threshold:
+        name: g0 still threshold
+    g1:
+      move_threshold:
+        name: g1 move threshold
+      still_threshold:
+        name: g1 still threshold
+    g2:
+      move_threshold:
+        name: g2 move threshold
+      still_threshold:
+        name: g2 still threshold
+    g3:
+      move_threshold:
+        name: g3 move threshold
+      still_threshold:
+        name: g3 still threshold
+    g4:
+      move_threshold:
+        name: g4 move threshold
+      still_threshold:
+        name: g4 still threshold
+    g5:
+      move_threshold:
+        name: g5 move threshold
+      still_threshold:
+        name: g5 still threshold
+    g6:
+      move_threshold:
+        name: g6 move threshold
+      still_threshold:
+        name: g6 still threshold
+    g7:
+      move_threshold:
+        name: g7 move threshold
+      still_threshold:
+        name: g7 still threshold
+    g8:
+      move_threshold:
+        name: g8 move threshold
+      still_threshold:
+        name: g8 still threshold
+
 
 sensor:
   - platform: ld2410
-    moving_distance: #检测到的运动目标的距离（以厘米为单位）
-      name: moving_distance
-    still_distance: # 检测到的静止目标的距离
-      name: still_distance
-    moving_energy: # 运动目标的能量
-      name: moving_energy
-    still_energy: # 静止目标的能量
-      name: still_energy
-    detection_distance: # 目标的距离
-      name: detection_distance
+    light:
+      name: light
+    moving_distance:
+      name : Moving Distance
+    still_distance:
+      name: Still Distance
+    moving_energy:
+      name: Move Energy
+    still_energy:
+      name: Still Energy
+    detection_distance:
+      name: Detection Distance
+    g0:
+      move_energy:
+        name: g0 move energy
+      still_energy:
+        name: g0 still energy
+    g1:
+      move_energy:
+        name: g1 move energy
+      still_energy:
+        name: g1 still energy
+    g2:
+      move_energy:
+        name: g2 move energy
+      still_energy:
+        name: g2 still energy
+    g3:
+      move_energy:
+        name: g3 move energy
+      still_energy:
+        name: g3 still energy
+    g4:
+      move_energy:
+        name: g4 move energy
+      still_energy:
+        name: g4 still energy
+    g5:
+      move_energy:
+        name: g5 move energy
+      still_energy:
+        name: g5 still energy
+    g6:
+      move_energy:
+        name: g6 move energy
+      still_energy:
+        name: g6 still energy
+    g7:
+      move_energy:
+        name: g7 move energy
+      still_energy:
+        name: g7 still energy
+    g8:
+      move_energy:
+        name: g8 move energy
+      still_energy:
+        name: g8 still energy
+
+  - platform: dht
+    pin: GPIO2   #使用D1 mini D4针脚
+    temperature:
+      name: "Living Room Temperature"
+    humidity:
+      name: "Living Room Humidity"
+    update_interval: 60s
 
 binary_sensor:
   - platform: ld2410
-    has_moving_target: # 运动目标是否存在
-      name: has_moving_target
-    has_still_target: # 静止目标是否存在
-      name: has_still_target
-    has_target: # 静止或移动目标是否存在
-      name: has_target
-```
+    has_target:
+      name: Presence
+    has_moving_target:
+      name: Moving Target
+    has_still_target:
+      name: Still Target
+    out_pin_presence_status:
+      name: out pin presence status
 
 ## 效果预览
 
 ![Alt text](images/Snipaste_2023-04-04_23-45-44.jpg)
 
 需要做自动化主要使用 `has_target` 即可。
+
